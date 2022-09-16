@@ -1,12 +1,12 @@
 from pydantic import BaseSettings
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class Settings(BaseSettings):
     app_name: str = "Loud Stream API"
+    jwt_secret_key: str
+    jwt_algorithm: str
+    access_token_expire_minutes: int
 
     class Config:
-        env_file = ".env"
+        env_file = "sql_app/.env"
         env_file_encoding = "utf-8"
