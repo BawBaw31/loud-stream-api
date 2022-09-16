@@ -5,9 +5,7 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    app_name: str = "Awesome API"
-    # admin_email: str = ""
-    items_per_user: int = 50
+    app_name: str = "Loud Stream API"
 
     class Config:
         env_file = ".env"

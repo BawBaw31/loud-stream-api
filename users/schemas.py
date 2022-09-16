@@ -8,3 +8,16 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class User(BaseModel):
+    username: str
+
+
+class UserInDB(User):
+    hashed_password: str
+
+
+class UserCreate(User):
+    password: str
+    email: str
