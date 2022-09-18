@@ -1,12 +1,15 @@
 from fastapi import FastAPI
 
-from . import users
+from . import artists, musics
+from .artists import main, models
 from .core.database import engine
-from .users import main, models
+from .musics import main, models
 
-users.models.Base.metadata.create_all(bind=engine)
+artists.models.Base.metadata.create_all(bind=engine)
+musics.models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 
-app.include_router(users.main.router)
+app.include_router(artists.main.router)
+app.include_router(musics.main.router)

@@ -1,4 +1,5 @@
 import datetime
+
 from pydantic import BaseModel
 
 
@@ -11,19 +12,18 @@ class TokenData(BaseModel):
     email: str | None = None
 
 
-class UserBase(BaseModel):
+class ArtistBase(BaseModel):
     email: str
+    stage_name: str
 
 
-class UserCreate(UserBase):
-    username: str
+class ArtistCreate(ArtistBase):
     password: str
 
 
-class User(UserBase):
+class Artist(ArtistBase):
     id: int
     email: str
-    username: str
     created_date: datetime.datetime
 
     class Config:

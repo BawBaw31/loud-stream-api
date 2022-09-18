@@ -5,8 +5,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from ..users import crud
-from ..users.schemas import TokenData
+from ..artists import crud
+from ..artists.schemas import TokenData
 from .config import Settings
 from .database import SessionLocal
 
@@ -26,8 +26,8 @@ def get_db():
         db.close()
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db),
-                           settings: Settings = Depends(get_settings)):
+async def get_current_artist(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db),
+                             settings: Settings = Depends(get_settings)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -42,7 +42,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         token_data = TokenData(email=email)
     except JWTError:
         raise credentials_exception
-    user = crud.get_user_by_email(db, email=token_data.email)
-    if user is None:
+    artist = crud.get_artist_by_email(db, email=token_data.email)
+    if artist is None:
         raise credentials_exception
-    return user
+    return artist
