@@ -1,8 +1,8 @@
 
 import datetime
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship, validates
 
 from ..core.database import Base
 
@@ -15,7 +15,16 @@ class Artist(Base):
     stage_name = Column(String, unique=True)
     hashed_password = Column(String)
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
-    # collaboration_id = Column(Integer, ForeignKey("musics.id"))
 
     musics = relationship("Music", back_populates="owner")
-    # collaborations = relationship("Music", back_populates="collaboration")
+
+    @validates('email')
+    def validate_email(self, key, address):
+        if '@' not in address or '.' not in address:
+            raise ValueError("failed simple email validation")
+        return address
+
+    @validates('stage_name')
+    def validate_name(self, key, value):
+        assert value != ''
+        return value

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from sql_app.artists.crud import get_artist
 from sql_app.artists.schemas import Artist
 from sql_app.core.dependencies import get_current_artist, get_db
 from sql_app.musics import crud
@@ -13,9 +14,10 @@ router = APIRouter(
 
 
 @router.post("/", response_model=schemas.Music)
-async def upload_music(music: schemas.MusicBase, db: Session = Depends(get_db), current_artist: Artist = Depends(get_current_artist)):
+async def upload_music(music_order: schemas.MusicOrder, db: Session = Depends(get_db),
+                       current_artist: Artist = Depends(get_current_artist)):
     music_create = schemas.MusicCreate(
-        **music.dict(), owner_id=current_artist.id)
+        **music_order.dict(), owner=current_artist)
     return crud.create_music(db, music_create)
 
 

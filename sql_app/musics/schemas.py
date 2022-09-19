@@ -2,8 +2,7 @@ import datetime
 import enum
 
 from pydantic import BaseModel
-
-from sql_app.artists.schemas import Artist
+from ..artists.schemas import Artist
 
 
 class GenresEnum(enum.Enum):
@@ -46,16 +45,19 @@ class MusicBase(BaseModel):
     genre: GenresEnum
 
 
-class MusicCreate(MusicBase):
-    owner_id: int
+class MusicOrder(MusicBase):
+    collaborators_ids: list[int]
 
+
+class MusicCreate(MusicOrder):
+    owner: Artist
 
 class Music(MusicBase):
     id: int
     streams: int
-    owner: Artist
-    # collaborators: list[Artist]
     created_date: datetime.datetime
+    owner: Artist
+    collaborators: list[Artist]
 
     class Config:
         orm_mode = True
