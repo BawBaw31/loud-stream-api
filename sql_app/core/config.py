@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     jwt_secret_key: str
     jwt_algorithm: str
     access_token_expire_minutes: int
+    database_url: str
 
     class Config:
         env_file = "sql_app/.env"

@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_USER: "root"
+      POSTGRES_DB: "loudstream"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  sql_app:
+    build: .
+    environment:
+      JWT_SECRET_KEY: "219df47cb3a7a44fc3a32382061a551294d2af0ec62d6f42fad9fdd0e5910990"
+      JWT_ALGORITHM: "HS256"
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      DATABASE_URL: "postgresql://root:password@db:5432/loudstream"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+volumes:
+  db-data: {}

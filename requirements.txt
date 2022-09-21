@@ -1,1 +1,9 @@
-# Dependencies required
+fastapi>=0.84.0,<1.0.0
+pydantic>=1.8.0,<2.0.0
+uvicorn>=0.17.0,<1.0.0
+sqlalchemy>=1.4.0,<2.0.0
+python-jose[cryptography]>=3.3.0,<4.0.0
+passlib[bcrypt]>=1.7.4,<2.0.0
+python-multipart>=0.0.5,<0.1.0
+psycopg2>=2.9.3,<3.0.0
+pydantic[dotenv]
