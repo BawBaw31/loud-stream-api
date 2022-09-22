@@ -18,7 +18,7 @@ class Music(Base):
     __tablename__ = "musics"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, unique=True, index=True)
+    title = Column(String, index=True)
     audio_file_url = Column(String, unique=True)
     cover_img_url = Column(String, unique=True)
     streams = Column(Integer, default=0)

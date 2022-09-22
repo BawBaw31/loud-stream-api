@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str
     access_token_expire_minutes: int
     database_url: str
+    aws_bucket_name: str
 
     class Config:
         env_file = "sql_app/.env"

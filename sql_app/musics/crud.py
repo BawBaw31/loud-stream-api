@@ -1,6 +1,8 @@
-from sql_app.artists.crud import get_artist
+import boto3
+from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
+from ..artists import schemas as artist_schemas
 from . import models, schemas
 
 
@@ -16,13 +18,25 @@ def get_musics(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Music).offset(skip).limit(limit).all()
 
 
-def create_music(db: Session, music: schemas.MusicCreate):
-    db_music = models.Music(title=music.title, audio_file_url=music.audio_file_url, cover_img_url=music.cover_img_url,
-                            genre=music.genre._value_, owner_id=music.owner.id)
+def upload_file_to_s3(file: UploadFile, bucket_name: str) -> str:
+    s3 = boto3.resource("s3")
+    bucket = s3.Bucket(bucket_name)
+    try:
+        bucket.upload_fileobj(file.file, file.filename)
+        return f"https://{bucket_name}.s3.amazonaws.com/{file.filename}"
+    except Exception as e:
+        print("Something Happened: ", e)
+        return False
+
+
+def create_music(db: Session, music_order: schemas.MusicOrder, bucket_name: str, owner: artist_schemas.Artist) -> schemas.Music:
+    uploaded_audio_file_url = upload_file_to_s3(
+        music_order.audio_file, bucket_name)
+    uploaded_cover_img_url = upload_file_to_s3(
+        music_order.cover_file, bucket_name)
+    db_music = models.Music(title=music_order.title, genre=music_order.genre._value_,
+                            audio_file_url=uploaded_audio_file_url, cover_img_url=uploaded_cover_img_url, owner_id=owner.id)
     db.add(db_music)
-    for collaborator_id in music.collaborators_ids:
-        if collaborator_id != music.owner.id:
-            db_music.collaborators.append(get_artist(db, collaborator_id))
     db.commit()
     db.refresh(db_music)
     return db_music

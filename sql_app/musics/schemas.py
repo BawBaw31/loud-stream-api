@@ -1,7 +1,9 @@
 import datetime
 import enum
 
+from fastapi import UploadFile
 from pydantic import BaseModel
+
 from ..artists.schemas import Artist
 
 
@@ -40,21 +42,19 @@ class GenresEnum(enum.Enum):
 
 class MusicBase(BaseModel):
     title: str
-    audio_file_url: str
-    cover_img_url: str
     genre: GenresEnum
 
 
 class MusicOrder(MusicBase):
-    collaborators_ids: list[int]
+    audio_file: UploadFile
+    cover_file: UploadFile
 
-
-class MusicCreate(MusicOrder):
-    owner: Artist
 
 class Music(MusicBase):
     id: int
     streams: int
+    audio_file_url: str
+    cover_img_url: str
     created_date: datetime.datetime
     owner: Artist
     collaborators: list[Artist]
