@@ -8,14 +8,9 @@ from sqlalchemy.orm import Session
 from ..artists import crud
 from ..artists.schemas import TokenData
 from .config import Settings
-from .database import SessionLocal
+from .database import SessionLocal, get_settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-@lru_cache()
-def get_settings():
-    return Settings()
 
 
 def get_db():
