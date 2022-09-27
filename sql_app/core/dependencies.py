@@ -1,24 +1,14 @@
-from functools import lru_cache
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from sql_app.core.database import get_db
 from sqlalchemy.orm import Session
 
 from ..artists import crud
 from ..artists.schemas import TokenData
-from .config import Settings
-from .database import SessionLocal, get_settings
+from .config import Settings, get_settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 async def get_current_artist(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db),

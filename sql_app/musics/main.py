@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sql_app.artists.schemas import Artist
-from sql_app.core.dependencies import get_current_artist, get_db
+from sql_app.core.database import get_db
+from sql_app.core.dependencies import get_current_artist
 from sql_app.core.storage import Storage
 from sql_app.musics import crud
 from sqlalchemy.orm import Session

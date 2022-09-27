@@ -1,7 +1,7 @@
 
 from fastapi.testclient import TestClient
+from sql_app.core.database import get_db
 
-from ..core.dependencies import get_db
 from ..main import app
 from .db_test_utils import override_get_db, test_db
 

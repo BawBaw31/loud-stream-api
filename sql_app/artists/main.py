@@ -2,11 +2,11 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sql_app.core.config import Settings
-from sql_app.core.database import get_settings
+from sql_app.core.config import Settings, get_settings
+from sql_app.core.database import get_db
 from sqlalchemy.orm import Session
 
-from ..core.dependencies import get_current_artist, get_db
+from ..core.dependencies import get_current_artist
 from . import schemas
 from .crud import authenticate_artist, create_access_token, create_artist
 

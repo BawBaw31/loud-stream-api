@@ -1,7 +1,6 @@
 import boto3
 from fastapi import Depends, UploadFile
-from sql_app.core.config import Settings
-from sql_app.core.database import get_settings
+from sql_app.core.config import Settings, get_settings
 
 
 class Storage:
