@@ -1,7 +1,6 @@
 import datetime
 import enum
 
-from fastapi import UploadFile
 from pydantic import BaseModel
 
 from ..artists.schemas import Artist
@@ -46,15 +45,13 @@ class MusicBase(BaseModel):
 
 
 class MusicOrder(MusicBase):
-    audio_file: UploadFile
-    cover_file: UploadFile
+    audio_file_name: str
+    cover_file_name: str
 
 
-class Music(MusicBase):
+class Music(MusicOrder):
     id: int
     streams: int
-    audio_file_url: str
-    cover_img_url: str
     created_date: datetime.datetime
     owner: Artist
     collaborators: list[Artist]

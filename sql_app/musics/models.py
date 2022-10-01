@@ -19,8 +19,8 @@ class Music(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
-    audio_file_url = Column(String, unique=True)
-    cover_img_url = Column(String, unique=True)
+    audio_file_name = Column(String, unique=True)
+    cover_file_name = Column(String, unique=True)
     streams = Column(Integer, default=0)
     genre = Column(String, Enum(GenresEnum))
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
