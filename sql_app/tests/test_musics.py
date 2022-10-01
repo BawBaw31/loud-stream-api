@@ -67,12 +67,3 @@ def test_get_music_by_id(test_db):
     data = response.json()
     assert data["title"] == music["title"]
     assert data["genre"] == music["genre"]
-
-
-def test_get_music_by_title(test_db):
-    music = musics_seed_util()
-    response = client.get(f"/musics/?title={music['title']}")
-    assert response.status_code == 200
-    data = response.json()
-    assert data[0]["title"] == music["title"]
-    assert data[0]["genre"] == music["genre"]

@@ -10,9 +10,6 @@ def get_music(db: Session, music_id: int):
     return db.query(models.Music).filter(models.Music.id == music_id).first()
 
 
-def get_music_by_title(db: Session, music_title: str):
-    return db.query(models.Music).filter(models.Music.email == music_title).first()
-
 
 def get_musics(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Music).offset(skip).limit(limit).all()

@@ -30,10 +30,5 @@ async def get_all_musics(db: Session = Depends(get_db)):
 
 
 @router.get("/{music_id}", response_model=schemas.Music)
-async def get_music_by_id(music_id: int, db: Session = Depends(get_db)):
+async def get_music(music_id: int, db: Session = Depends(get_db)):
     return crud.get_music(db, music_id)
-
-
-@router.get("/{music_title}", response_model=schemas.Music)
-async def get_music_by_title(music_title: str, db: Session = Depends(get_db)):
-    return crud.get_music_by_title(db, music_title)
