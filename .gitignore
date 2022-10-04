@@ -1,8 +1,12 @@
-# Env variables
+# ENV VARIABLES
 .env
 
-# Python
+# PYTHON
 **__pycache__**
 
 # DB
 *.db
+
+# IDE
+.idea
+.vscode
