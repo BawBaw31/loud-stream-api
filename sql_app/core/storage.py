@@ -3,7 +3,8 @@ import os
 import boto3
 import botocore
 from fastapi import Depends, UploadFile
-from sql_app.core.config import Settings, get_settings
+
+from .config import Settings, get_settings
 
 
 class Storage:
@@ -13,8 +14,8 @@ class Storage:
         self.bucket = self.s3.Bucket(self.bucket_name)
         self.download_folder = "downloads"
 
-    def generate_file_name(self, file_category: str, file_type: str, file_name: str, owner_name: str) -> str:
-        return f"{owner_name.replace(' ', '_')}/{file_category}/{file_name.replace(' ', '_')}.{file_type}"
+    def generate_file_name(self, file_category: str, file_extension: str, file_name: str, owner_name: str) -> str:
+        return f"{owner_name.replace(' ', '_')}/{file_category}/{file_name.replace(' ', '_')}{file_extension}"
 
     async def upload_file_to_s3(self, file: UploadFile, file_name: str):
         try:

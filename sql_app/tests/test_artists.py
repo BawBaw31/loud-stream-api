@@ -1,50 +1,54 @@
-
+import pytest
 from fastapi.testclient import TestClient
-from sql_app.core.database import get_db
 
+from .fixtures.artists import given_artist
+
+from ..core.database import get_db
 from ..main import app
-from .db_test_utils import override_get_db, test_db
+from .utils.artists import authenticate_util
+from .utils.db import override_get_db, test_db
 
 app.dependency_overrides[get_db] = override_get_db
 
 client = TestClient(app)
 
-given_user = {"email": "test@test.test",
-              "stage_name": "test", "password": "test"}
 
-
-def authenticate_util(client):
-    client.post(
-        "/register", headers={"Content-Type": "application/json"}, json=given_user)
-    login = client.post("/token", headers={"Content-Type": "application/x-www-form-urlencoded"}, data={
-        "username": given_user["email"], "password": given_user["password"]})
-    return login.json().get("access_token")
-
-
-def test_register_artist(test_db):
+@pytest.mark.usefixtures("test_db")
+def test_register_artist():
+    # When
     response = client.post(
-        "/register", headers={"Content-Type": "application/json"}, json=given_user)
-    assert response.status_code == 200
+        "/register", headers={"Content-Type": "application/json"}, json=given_artist)
     data = response.json()
-    assert data["email"] == "test@test.test"
-    assert data["stage_name"] == "test"
+
+    # Then
+    assert response.status_code == 200
+    assert data["email"] == given_artist["email"]
+    assert data["stage_name"] == given_artist["stage_name"]
 
 
-def test_login_for_access_token(test_db):
+@pytest.mark.usefixtures("test_db")
+def test_login_for_access_token():
+    # When
     client.post(
-        "/register", headers={"Content-Type": "application/json"}, json=given_user)
+        "/register", headers={"Content-Type": "application/json"}, json=given_artist)
     response = client.post("/token", headers={"Content-Type": "application/x-www-form-urlencoded"}, data={
-                           "username": given_user["email"], "password": given_user["password"]})
-    assert response.status_code == 200
+                           "username": given_artist["email"], "password": given_artist["password"]})
     data = response.json()
+
+    # Then
+    assert response.status_code == 200
     assert "access_token" in data
     assert "token_type" in data
 
 
-def test_me(test_db):
-    token = authenticate_util(client)
+@pytest.mark.usefixtures("test_db")
+def test_me():
+    # When
+    token = authenticate_util(client, given_artist)
     response = client.get("/me", headers={"Authorization": f"Bearer {token}"})
+
+    # Then
     assert response.status_code == 200
     data = response.json()
-    assert data["email"] == given_user["email"]
-    assert data["stage_name"] == given_user["stage_name"]
+    assert data["email"] == given_artist["email"]
+    assert data["stage_name"] == given_artist["stage_name"]

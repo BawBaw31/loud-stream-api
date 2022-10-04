@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+import pathlib
+
+from fastapi import (APIRouter, Depends, File, Form, HTTPException, UploadFile,
+                     status)
 from fastapi.responses import StreamingResponse
-from sql_app.artists.schemas import Artist
-from sql_app.core.database import get_db
-from sql_app.core.dependencies import get_current_artist
-from sql_app.core.storage import Storage
-from sql_app.musics import crud
 from sqlalchemy.orm import Session
 
-from . import schemas
+from ..artists.schemas import Artist
+from ..core.database import get_db
+from ..core.dependencies import get_current_artist
+from ..core.storage import Storage
+from . import crud, schemas
 
 router = APIRouter(
     prefix="/musics",
@@ -21,10 +23,20 @@ async def add_music(audio_file: UploadFile = File(...), cover_file: UploadFile =
                     db: Session = Depends(get_db), current_artist: Artist = Depends(get_current_artist),
                     storage: Storage = Depends(Storage)):
 
+    errors = {}
+    if audio_file.content_type != "audio/mpeg" and audio_file.content_type != "audio/wav":
+        errors["audio_file"] = "Audio file must be mp3 or wav"
+    if cover_file.content_type != "image/jpeg" and cover_file.content_type != "image/png":
+        errors["cover_file"] = "Cover file must be jpeg or png"
+
+    if len(errors.keys()):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=errors)
+
     audio_file_name = storage.generate_file_name(
-        "audio", audio_file.filename.split(".")[1], music_title, current_artist.stage_name)
+        "audio", pathlib.Path(audio_file.filename).suffix, music_title, current_artist.stage_name)
     cover_file_name = storage.generate_file_name(
-        "cover", cover_file.filename.split(".")[1], music_title, current_artist.stage_name)
+        "cover", pathlib.Path(cover_file.filename).suffix, music_title, current_artist.stage_name)
 
     await storage.upload_file_to_s3(audio_file, audio_file_name)
     await storage.upload_file_to_s3(cover_file, cover_file_name)
@@ -42,7 +54,9 @@ async def get_all_musics(db: Session = Depends(get_db)):
 
 
 @router.get("/{music_id}")
-async def get_music(music_id: int, db: Session = Depends(get_db), storage: Storage = Depends(Storage)):
+async def stream_music_by_id(music_id: int, db: Session = Depends(get_db), storage: Storage = Depends(Storage)):
 
     music: schemas.Music = crud.get_music(db, music_id)
-    return StreamingResponse(storage.download_music_from_s3(music.audio_file_name), media_type="music/mp3")
+    media_type = "audio/mpeg" if music.audio_file_name.endswith(
+        ".mp3") else "audio/wav"
+    return StreamingResponse(storage.download_music_from_s3(music.audio_file_name), media_type=media_type)
