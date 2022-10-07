@@ -2,13 +2,15 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from ...core.config import Settings
 from ...core.database import Base
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
+settings: Settings = Settings(_env_file=["sql_app/.env", "sql_app/.env.test"])
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    settings.database_url, connect_args={"check_same_thread": False}
 )
+
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine)
 

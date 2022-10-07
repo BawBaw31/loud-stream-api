@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     aws_bucket_name: str
 
     class Config:
-        env_file = "sql_app/.env"
+        env_file = "sql_app/.env", "sql_app/.env.local"
         env_file_encoding = "utf-8"
 
 
