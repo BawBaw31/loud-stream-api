@@ -23,6 +23,7 @@ async def add_music(audio_file: UploadFile = File(...), cover_file: UploadFile =
                     db: Session = Depends(get_db), current_artist: Artist = Depends(get_current_artist),
                     storage: Storage = Depends(Storage)):
 
+    # Sortir
     errors = {}
     if audio_file.content_type != "audio/mpeg" and audio_file.content_type != "audio/wav":
         errors["audio_file"] = "Audio file must be mp3 or wav"

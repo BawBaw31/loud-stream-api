@@ -8,7 +8,7 @@ stages:
 
 cache:
   paths:
-    - /usr/local/lib/python3.10/site-packages
+    - .pytest_cache
 
 before_script:
   - python --version # For debugging
