@@ -35,13 +35,13 @@ def create_artist(db: Session, artist: schemas.ArtistCreate):
 
 
 # Authentication
-def authenticate_artist(db: Session, email: str, password: str):
+def authenticate_artist(db: Session, email: str, password: str) -> schemas.ArtistBase | bool:
     artist = get_artist_by_email(db, email)
     if not artist:
         return False
     if not pwd_context.verify(password, artist.hashed_password):
         return False
-    return artist
+    return schemas.ArtistBase(email=artist.email, stage_name=artist.stage_name)
 
 
 def create_access_token(data: dict, secret: str, algorithm: str, expires_delta: timedelta | None = None):
