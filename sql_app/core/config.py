@@ -1,4 +1,5 @@
 from functools import lru_cache
+import os
 
 from pydantic import BaseSettings
 
@@ -12,7 +13,9 @@ class Settings(BaseSettings):
     aws_bucket_name: str
 
     class Config:
-        env_file = "sql_app/.env", "sql_app/.env.local"
+        environment = os.getenv("ENV", "production")
+        env_file = ["sql_app/.env", "sql_app/.env.local",
+                    f"sql_app/.env.{environment}"]
         env_file_encoding = "utf-8"
 
 

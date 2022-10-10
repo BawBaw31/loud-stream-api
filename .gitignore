@@ -5,9 +5,6 @@
 # PYTHON
 **__pycache__**
 
-# VIRTUAL ENVIRONMENT
-.pytest_cache
-
 # DB
 *.db
 
