@@ -1,0 +1,48 @@
+image: python:latest
+
+stages:
+  - build
+  - test
+  - deploy
+  - notify
+
+cache:
+  paths:
+    - .pytest_cache
+
+before_script:
+  - python --version # For debugging
+  - pip install -r requirements.txt
+
+build:
+  stage: build
+  script:
+    - echo "Builded !"
+
+tests_unit:
+  stage: test
+  script:
+    - echo "Tested unit !"
+
+tests_func:
+  stage: test
+  script:
+    - pytest
+
+deploy_dev:
+  only: [develop]
+  stage: deploy
+  script:
+    - echo "Deployed dev!"
+
+deploy_prod:
+  only: [main]
+  stage: deploy
+  script:
+    - echo "Deployed prod!"
+
+notify:
+  only: [main]
+  stage: notify
+  script:
+    - echo "Notifyed !"

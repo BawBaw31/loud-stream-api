@@ -1,10 +1,9 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from .fixtures.artists import given_artist
-
 from ..core.database import get_db
 from ..main import app
+from .fixtures.artists import given_artist
 from .utils.artists import authenticate_util
 from .utils.db import override_get_db, test_db
 
