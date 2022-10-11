@@ -1,3 +1,7 @@
+# IDE
+.idea
+.vscode
+
 # ENV VARIABLES
 .env.local
 .env.test
@@ -5,9 +9,11 @@
 # PYTHON
 **__pycache__**
 
+# TESTS
+.pytest_cache
+
 # DB
 *.db
 
-# IDE
-.idea
-.vscode
+# ALEMBIC
+alembic.ini
