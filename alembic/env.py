@@ -22,6 +22,7 @@ from sql_app.core.database import Base
 
 from sql_app.artists.models import Artist
 from sql_app.musics.models import Music
+from sql_app.albums.models import Album
 
 target_metadata = Base.metadata
 

@@ -1,13 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import artists, musics
+from . import albums, artists, musics
+from .albums import main, models
 from .artists import main, models
 from .core.database import engine
 from .musics import main, models
 
 artists.models.Base.metadata.create_all(bind=engine)
 musics.models.Base.metadata.create_all(bind=engine)
+albums.models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -25,3 +27,4 @@ app.add_middleware(
 
 app.include_router(artists.main.router)
 app.include_router(musics.main.router)
+app.include_router(albums.main.router)
