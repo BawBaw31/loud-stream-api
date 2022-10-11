@@ -25,7 +25,7 @@ def get_artists(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Artist).offset(skip).limit(limit).all()
 
 
-def create_artist(db: Session, artist: schemas.ArtistCreate):
+def create_artist(db: Session, artist: schemas.ArtistOrder):
     db_artist = models.Artist(email=artist.email, stage_name=artist.stage_name,
                               hashed_password=get_password_hash(artist.password))
     db.add(db_artist)

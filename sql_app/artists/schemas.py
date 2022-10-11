@@ -3,8 +3,6 @@ import datetime
 from pydantic import BaseModel
 
 
-
-
 class TokenData(BaseModel):
     email: str | None = None
 
@@ -14,7 +12,7 @@ class ArtistBase(BaseModel):
     stage_name: str
 
 
-class ArtistCreate(ArtistBase):
+class ArtistOrder(ArtistBase):
     password: str
 
 
@@ -25,6 +23,7 @@ class Artist(ArtistBase):
 
     class Config:
         orm_mode = True
+
 
 class Token(BaseModel):
     access_token: str

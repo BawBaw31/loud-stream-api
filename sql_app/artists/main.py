@@ -36,7 +36,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @router.post("/register", response_model=schemas.Artist)
-async def register_artist(artist: schemas.ArtistCreate, db: Session = Depends(get_db)):
+async def register_artist(artist: schemas.ArtistOrder, db: Session = Depends(get_db)):
     return create_artist(db, artist)
 
 

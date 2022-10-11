@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from ..artists.schemas import Artist
 from ..core.database import get_db
 from ..core.dependencies import get_current_artist
+from ..core.enums import GenresEnum
 from ..core.storage import Storage
 from ..core.utils import check_files_types
 from . import crud, schemas
@@ -19,7 +20,7 @@ router = APIRouter(
 
 @router.post("/", response_model=schemas.Music)
 async def add_music(audio_file: UploadFile = File(...), cover_file: UploadFile = File(...),
-                    music_title: str = Form(...), music_genre: schemas.GenresEnum = Form(...),
+                    music_title: str = Form(...), music_genre: GenresEnum = Form(...),
                     db: Session = Depends(get_db), current_artist: Artist = Depends(get_current_artist),
                     storage: Storage = Depends(Storage)):
 

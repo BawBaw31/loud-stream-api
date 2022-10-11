@@ -1,12 +1,12 @@
 
 import datetime
 
-from sqlalchemy import (Column, DateTime, Enum, ForeignKey, Integer, String,
-                        Table)
+from sqlalchemy import (Boolean, Column, DateTime, Enum, ForeignKey, Integer,
+                        String, Table)
 from sqlalchemy.orm import relationship
 
 from ..core.database import Base
-from ..musics.schemas import GenresEnum
+from ..core.enums import GenresEnum
 
 music_collaborators = Table("music_collaborators", Base.metadata,
                             Column("music_id", Integer,
@@ -23,6 +23,7 @@ class Music(Base):
     cover_file_name = Column(String, unique=True)
     streams = Column(Integer, default=0)
     genre = Column(String, Enum(GenresEnum))
+    published = Column(Boolean, default=False)
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
     owner_id = Column(Integer, ForeignKey("artists.id"))
     album_id = Column(Integer, ForeignKey("albums.id"))
