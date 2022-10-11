@@ -1,7 +1,6 @@
 import pathlib
 
-from fastapi import (APIRouter, Depends, File, Form, HTTPException, UploadFile,
-                     status)
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -9,6 +8,7 @@ from ..artists.schemas import Artist
 from ..core.database import get_db
 from ..core.dependencies import get_current_artist
 from ..core.storage import Storage
+from ..core.utils import check_files_types
 from . import crud, schemas
 
 router = APIRouter(
@@ -23,16 +23,7 @@ async def add_music(audio_file: UploadFile = File(...), cover_file: UploadFile =
                     db: Session = Depends(get_db), current_artist: Artist = Depends(get_current_artist),
                     storage: Storage = Depends(Storage)):
 
-    # Sortir
-    errors = {}
-    if audio_file.content_type != "audio/mpeg" and audio_file.content_type != "audio/wav":
-        errors["audio_file"] = "Audio file must be mp3 or wav"
-    if cover_file.content_type != "image/jpeg" and cover_file.content_type != "image/png":
-        errors["cover_file"] = "Cover file must be jpeg or png"
-
-    if len(errors.keys()):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=errors)
+    await check_files_types(audio_file, cover_file)
 
     audio_file_name = storage.generate_file_name(
         "audio", pathlib.Path(audio_file.filename).suffix, music_title, current_artist.stage_name)
