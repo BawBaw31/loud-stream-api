@@ -16,3 +16,8 @@ FastApi
 
 ### Testing the app
 - run `ENV=test pytest` 🧪
+
+### Migrations
+- run `alembic revision --autogenerate -m "<revision message>"` to create a revision file
+- run `alembic upgrade head` or `alembic upgrade +<N>` or `alembic upgrade <revision tag>` to migrate
+- run `alembic downgrade -<N>` or `alembic downgrade <revision tag>` to rollback
